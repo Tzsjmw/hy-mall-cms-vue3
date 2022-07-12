@@ -4,9 +4,11 @@ const AutoImport = require('unplugin-auto-import/webpack')
 const Components = require('unplugin-vue-components/webpack')
 const { ElementPlusResolver } = require('unplugin-vue-components/resolvers')
 module.exports = defineConfig({
+    publicPath: '/',
     transpileDependencies: true,
     // 1.配置方式一：CLI提供的属性
-    // outputDir: './bulid'    修改打包的路径
+    //  修改打包的路径
+    outputDir: './bulid',
     // 2.配置方式二：和webpack属性完全一致，最后会进行合并
     // configureWebpack: {
     //   resolve: {
@@ -25,7 +27,7 @@ module.exports = defineConfig({
     chainWebpack: (config) => {
         config.resolve.alias
             .set('@', path.resolve(__dirname, 'src'))
-            .set('views', '@/views')
+            .set('components', '@/components')
     },
     // element-plus在vue3.0中按需自动导入
     configureWebpack: {
