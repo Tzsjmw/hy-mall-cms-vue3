@@ -58,7 +58,7 @@ axios.defaults.timeout = 10000
 //     console.log(res.data)
 //   })
 
-// 3.post请求
+// // 3.post请求
 // axios
 //   .post('/post', {
 //     data: {

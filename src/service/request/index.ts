@@ -1,89 +1,126 @@
+// acc
 import axios from 'axios'
 import type { AxiosInstance } from 'axios'
-import type { HYRequestInterceptors, HYRequesConfig } from './type'
-// import { ElLoading } from 'element-plus'
+import type { HYRequestInterceptors, HYRequestConfig } from './type'
+import { ElLoading } from 'element-plus'
 // 使用loading需要单独引入loading样式
 import 'element-plus/theme-chalk/el-loading.css'
+const DEAFULT_LOADING = true
+
 class HYRequest {
   instance: AxiosInstance
   interceptors?: HYRequestInterceptors
-
-  constructor(config: HYRequesConfig) {
+  showLoading: boolean
+  constructor(config: HYRequestConfig) {
     // 创建axios实例
     this.instance = axios.create(config)
 
+    // 保存基本信息
+    this.showLoading = config.showLoading ?? DEAFULT_LOADING
     this.interceptors = config.interceptors
-    // 使用拦截器
 
-    // 1.从config中取出的拦截器是对应实例的拦截器
+    // 使用拦截器
+    // 1.从config中取出的拦截器是对应的实例的拦截器
     this.instance.interceptors.request.use(
       this.interceptors?.requestInterceptor,
-      this.interceptors?.requestInterceptorsCath
+      this.interceptors?.requestInterceptorCatch
     )
     this.instance.interceptors.response.use(
-      this.interceptors?.reponseInterceptor,
-      this.interceptors?.reponseInterceptorsCath
+      this.interceptors?.responseInterceptor,
+      this.interceptors?.responseInterceptorCatch
     )
 
-    //  2.添加所有实例都有的公共拦截器
+    // 2.添加所有的实例都有的拦截器
     this.instance.interceptors.request.use(
       (config) => {
         // console.log('所有实例都有的拦截器:请求拦截成功')
 
-        // element-plus里的loading
-        // const loadingInstance = ElLoading.service({
-        //   lock: true,
-        //   body: true,
-        //   text: '加载中...',
-        //   background: 'rgba(0, 0, 0, 0.5)'
-        // })
-        // setTimeout(() => {
-        //   // 关闭全局Loading
-        //   loadingInstance.close()
-        // }, 1000)
+        // element - plus里的loading
+        const loadingInstance = ElLoading.service({
+          lock: true,
+          body: true,
+          text: '加载中...',
+          background: 'rgba(0, 0, 0, 0.5)'
+        })
+        setTimeout(() => {
+          // 关闭全局Loading
+          loadingInstance.close()
+        }, 500)
 
         return config
       },
       (err) => {
-        // console.log('所有实例都有的拦截器:请求拦截失败')
-
         return err
       }
     )
+
     this.instance.interceptors.response.use(
       (res) => {
-        // console.log('所有实例都有的拦截器:响应拦截成功')
-
         const data = res.data
         if (data.returnCode === '-1001') {
-          console.log('请求失败，错误信息')
+          console.log('请求失败~, 错误信息')
         } else {
           return data
         }
       },
       (err) => {
-        // console.log('所有实例都有的拦截器:响应拦截成功')
-        // 一般判断不同的错误返回不同的信息用 switch 比较方便
-        if (err.response.status == 404) {
-          console.log('404错误!!!')
+        // 例子: 判断不同的HttpErrorCode显示不同的错误信息
+        if (err.response.status === 404) {
+          console.log('404的错误~')
         }
         return err
       }
     )
   }
 
-  request(config: HYRequesConfig): void {
-    if (config.interceptors?.requestInterceptor) {
-      config = config.interceptors.requestInterceptor(config)
-    }
-    this.instance.request(config).then((res) => {
-      if (config.interceptors?.reponseInterceptor) {
-        res = config.interceptors.reponseInterceptor(res)
-        return res
+  request<T>(config: HYRequestConfig<T>): Promise<T> {
+    return new Promise((resolve, reject) => {
+      // 1.单个请求对请求config的处理
+      if (config.interceptors?.requestInterceptor) {
+        config = config.interceptors.requestInterceptor(config)
       }
 
-      // console.log(res)
+      // 2.判断是否需要显示loading
+      if (config.showLoading === false) {
+        this.showLoading = config.showLoading
+      }
+
+      this.instance
+        .request<any, T>(config)
+        .then((res) => {
+          // 1.单个请求对数据的处理
+          if (config.interceptors?.responseInterceptor) {
+            res = config.interceptors.responseInterceptor(res)
+          }
+          // 2.将showLoading设置true, 这样不会影响下一个请求
+          this.showLoading = DEAFULT_LOADING
+
+          // 3.将结果resolve返回出去
+          resolve(res)
+        })
+        .catch((err) => {
+          // 将showLoading设置true, 这样不会影响下一个请求
+          this.showLoading = DEAFULT_LOADING
+          reject(err)
+          return err
+        })
     })
+  }
+
+  get<T>(config: HYRequestConfig<T>): Promise<T> {
+    return this.request<T>({ ...config, method: 'GET' })
+  }
+
+  post<T>(config: HYRequestConfig<T>): Promise<T> {
+    return this.request<T>({ ...config, method: 'POST' })
+  }
+
+  delete<T>(config: HYRequestConfig<T>): Promise<T> {
+    return this.request<T>({ ...config, method: 'DELETE' })
+  }
+
+  patch<T>(config: HYRequestConfig<T>): Promise<T> {
+    return this.request<T>({ ...config, method: 'PATCH' })
   }
 }
 

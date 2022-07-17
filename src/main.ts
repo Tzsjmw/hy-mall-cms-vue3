@@ -17,10 +17,13 @@ import hyRequest from './service'
 import 'normalize.css'
 import './assets/css/index.css'
 
+import { setupStore } from './store'
+
 const app = createApp(App)
 app.use(router)
 app.use(store)
 app.mount('#app')
+setupStore()
 
 import * as ElIconModules from '@element-plus/icons-vue'
 
@@ -51,7 +54,7 @@ for (const iconName in ElIconModules) {
 //   }
 // })
 
-hyRequest.request({
-  url: '/home/multidata',
-  method: 'GET'
-})
+// hyRequest.request({
+//   url: '/home/multidata',
+//   method: 'GET'
+// })

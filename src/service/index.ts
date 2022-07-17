@@ -1,31 +1,43 @@
 //servie统一出口
+import { AxiosRequestConfig } from 'axios'
 import HYRequest from './request'
 import { BASE_URL, TIME_OUT } from './request/config'
+import localCache from '@/utils/cache'
+interface YXRequestConfig extends AxiosRequestConfig {
+  interceptors?: any
+  headers?: any
+}
 
 const hyRequest = new HYRequest({
   baseURL: BASE_URL,
   timeout: TIME_OUT,
   interceptors: {
-    requestInterceptor(config) {
-      // 携带token的拦截
-      const token = ''
-      if (config && config.headers) {
+    // requestInterceptor(config) {
+    //   // 携带token的拦截
+    //   const token = localStorage.getSave('token')
+
+    //   if (config && config.headers) {
+    //     config.headers.Authorization = `Bearer ${token}`
+    //   }
+
+    //   console.log('请求成功的拦截')
+    //   return config
+    // },
+    requestInterceptor: (config: YXRequestConfig) => {
+      const token = localCache.getCache('token')
+      if (token) {
         config.headers.Authorization = `Bearer ${token}`
       }
-
       // console.log('请求成功的拦截')
       return config
     },
-    requestInterceptorsCath(err) {
-      // console.log('请求失败的拦截')
+    requestInterceptorCatch: (err) => {
       return err
     },
-    reponseInterceptor(res) {
-      // console.log('响应成功的拦截')
+    responseInterceptor: (res) => {
       return res
     },
-    reponseInterceptorsCath(err) {
-      // console.log('响应失败的拦截')
+    responseInterceptorCatch: (err) => {
       return err
     }
   }

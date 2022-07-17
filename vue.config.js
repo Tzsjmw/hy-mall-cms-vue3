@@ -9,6 +9,19 @@ module.exports = defineConfig({
     // 1.配置方式一：CLI提供的属性
     //  修改打包的路径
     outputDir: './bulid',
+    devServer: {
+        hot: true,
+        proxy: {
+            '^/api': {
+                target: 'http://152.136.185.210:5000',
+                changeOrigin: true,
+                // 注意路径重写并不会在真实请求内体现出来
+                pathRewrite: {
+                    '^/api': '',
+                },
+            },
+        },
+    },
     // 2.配置方式二：和webpack属性完全一致，最后会进行合并
     // configureWebpack: {
     //   resolve: {
