@@ -7,7 +7,8 @@ import router from './router'
 import store from './store'
 // axios
 // import './service/axios_demo'
-import hyRequest from './service'
+// import hyRequest from './service'
+
 // element-plus 全局引用
 // import ElementPlus from 'element-plus'
 // import 'element-plus/dist/index.css'
