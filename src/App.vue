@@ -1,21 +1,26 @@
 <template>
   <div class="app">
-    <router-view></router-view>
+    <el-config-provider :locale="zhCn">
+      <router-view></router-view>
+    </el-config-provider>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-// declare module '@vue/runtime-core' {
-//   interface ComponentCustomProperties {
-//     $store: any
-//   }
-// }
+// Element Plus国际化
+import { ElConfigProvider } from 'element-plus'
+import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 
 export default defineComponent({
   name: 'App',
   components: {
-    // ElButton
+    ElConfigProvider
+  },
+  setup() {
+    return {
+      zhCn
+    }
   }
 })
 </script>

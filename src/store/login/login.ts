@@ -14,6 +14,8 @@ import localCache from '@/utils/cache'
 
 import router from '@/router'
 
+import { mapMenusToRoutes } from '@/utils/map-menus'
+
 const loginModule: Module<ILoginstate, IRootState> = {
   namespaced: true,
   state() {
@@ -34,6 +36,14 @@ const loginModule: Module<ILoginstate, IRootState> = {
     },
     changeUserMenus(state, userMenus: any) {
       state.userMenus = userMenus
+
+      // userMenu=>routes
+      const routes = mapMenusToRoutes(userMenus)
+
+      // 将routes => router.main.children
+      routes.forEach((route) => {
+        router.addRoute('main', route)
+      })
     }
   },
   actions: {

@@ -2,7 +2,7 @@
 import axios from 'axios'
 import type { AxiosInstance } from 'axios'
 import type { HYRequestInterceptors, HYRequestConfig } from './type'
-import { ElLoading } from 'element-plus'
+// import { ElLoading } from 'element-plus'
 // 使用loading需要单独引入loading样式
 import 'element-plus/theme-chalk/el-loading.css'
 const DEAFULT_LOADING = true
@@ -36,16 +36,16 @@ class HYRequest {
         // console.log('所有实例都有的拦截器:请求拦截成功')
 
         // element - plus里的loading
-        const loadingInstance = ElLoading.service({
-          lock: true,
-          body: true,
-          text: '加载中...',
-          background: 'rgba(0, 0, 0, 0.5)'
-        })
-        setTimeout(() => {
-          // 关闭全局Loading
-          loadingInstance.close()
-        }, 500)
+        // const loadingInstance = ElLoading.service({
+        //   lock: true,
+        //   body: true,
+        //   text: '加载中...',
+        //   background: 'rgba(0, 0, 0, 0.5)'
+        // })
+        // setTimeout(() => {
+        //   // 关闭全局Loading
+        //   loadingInstance.close()
+        // }, 500)
 
         return config
       },
@@ -107,19 +107,19 @@ class HYRequest {
     })
   }
 
-  get<T>(config: HYRequestConfig<T>): Promise<T> {
+  get<T = any>(config: HYRequestConfig<T>): Promise<T> {
     return this.request<T>({ ...config, method: 'GET' })
   }
 
-  post<T>(config: HYRequestConfig<T>): Promise<T> {
+  post<T = any>(config: HYRequestConfig<T>): Promise<T> {
     return this.request<T>({ ...config, method: 'POST' })
   }
 
-  delete<T>(config: HYRequestConfig<T>): Promise<T> {
+  delete<T = any>(config: HYRequestConfig<T>): Promise<T> {
     return this.request<T>({ ...config, method: 'DELETE' })
   }
 
-  patch<T>(config: HYRequestConfig<T>): Promise<T> {
+  patch<T = any>(config: HYRequestConfig<T>): Promise<T> {
     return this.request<T>({ ...config, method: 'PATCH' })
   }
 }

@@ -6,7 +6,7 @@
     </div>
 
     <el-menu
-      default-active="2"
+      :default-active="defaultValue"
       class="el-menu-vertical"
       background-color="#0c2135"
       text-color="#b7bdc3"
@@ -24,7 +24,10 @@
             </template>
             <!-- 遍历里面的 item-->
             <template v-for="subitem in item.children" :key="subitem.id">
-              <el-menu-item :index="subitem.id + ''">
+              <el-menu-item
+                :index="subitem.id + ''"
+                @click="handleMenuItemClick(subitem)"
+              >
                 <template #title>
                   <span class="item_interior">{{ subitem.name }}</span>
                 </template>
@@ -46,8 +49,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, ref } from 'vue'
 import { useStore } from '@/store'
+import { useRouter, useRoute } from 'vue-router'
+import { pathMapToMenu } from '@/utils/map-menus'
 
 // vuex - typescript  => pinia
 
@@ -61,11 +66,29 @@ export default defineComponent({
   setup() {
     // 1.图标
     const iconName = ['Platform', 'Setting', 'ShoppingBag', 'ChatLineRound']
+    // 2.绑定当前激活菜单
     const store = useStore()
     const userMenus = computed(() => store.state.login.userMenus)
+    // router
+    const router = useRouter()
+    const route = useRoute()
+    const currentPath = route.path
+
+    // 刷新   菜单定位
+    const menu = pathMapToMenu(userMenus.value, currentPath)
+    const defaultValue = ref(menu.id + '')
+
+    // event handle
+    const handleMenuItemClick = (item: any) => {
+      router.push({
+        path: item.url ?? 'not-found'
+      })
+    }
     return {
       userMenus,
-      iconName
+      iconName,
+      handleMenuItemClick,
+      defaultValue
     }
   }
 })

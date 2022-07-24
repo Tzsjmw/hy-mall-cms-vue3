@@ -11,7 +11,11 @@
           <nav-header @foldChange="headerfoldChange" />
         </el-header>
         <!-- 主体内容 -->
-        <el-main class="page-content">main </el-main>
+        <el-main class="page-content">
+          <div class="page-info">
+            <router-view></router-view>
+          </div>
+        </el-main>
       </el-container>
     </el-container>
   </div>
@@ -57,6 +61,10 @@ export default defineComponent({
 
 .page-content {
   height: calc(100% - 48px);
+  .page-info {
+    background-color: white;
+    border-radius: 5px;
+  }
 }
 
 .el-header,
