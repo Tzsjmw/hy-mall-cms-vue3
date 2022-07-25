@@ -14,6 +14,7 @@
       border
       style="width: 100%"
       @selection-change="handleSelectionChange"
+      v-bind="childrenProps"
     >
       <!-- 选择栏 -->
       <el-table-column
@@ -42,7 +43,7 @@
       </template>
     </el-table>
     <!-- 底部分页器 -->
-    <div class="footer">
+    <div class="footer" v-if="showFooter">
       <div class="footer_pangin">
         <slot name="footer">
           <el-pagination
@@ -95,6 +96,14 @@ export default defineComponent({
     page: {
       type: Object,
       default: () => ({ currentPage: 0, pageSize: 10 })
+    },
+    childrenProps: {
+      type: Object,
+      default: () => ({})
+    },
+    showFooter: {
+      type: Boolean,
+      default: true
     }
   },
   emits: ['selectionChange', 'update:page'],

@@ -8,7 +8,13 @@
     >
       <!-- 1.header中的插槽 -->
       <template #headerHandler>
-        <el-button type="primary" size="large">新建用户</el-button>
+        <el-button
+          v-if="isCreate"
+          type="primary"
+          size="large"
+          @click="handleNewClick"
+          >新建用户</el-button
+        >
       </template>
 
       <!-- 2.列中的插槽 -->
@@ -29,13 +35,26 @@
         <span>{{ $filters.formatTime(scope.row.updateAt) }}</span>
       </template>
 
-      <template #handler>
+      <template #handler="scope">
         <div class="handle-btns">
-          <el-button size="small" link type="primary">
+          <el-button
+            size="small"
+            link
+            type="primary"
+            v-if="isUpdate"
+            @click="handleEditClick(scope.row)"
+          >
             <el-icon><Edit /></el-icon>
             编辑
           </el-button>
-          <el-button size="small" link type="primary">
+
+          <el-button
+            size="small"
+            link
+            type="primary"
+            v-if="isDelete"
+            @click="handleDeleteClick(scope.row)"
+          >
             <el-icon><Delete /></el-icon>
             删除</el-button
           >
@@ -62,6 +81,8 @@ import { useStore } from '@/store'
 
 import HyTable from '@/base-ui/table'
 
+import { usePermission } from '@/hooks/use-permission'
+
 export default defineComponent({
   components: {
     HyTable
@@ -76,11 +97,18 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props) {
+  emits: ['newBtnClick', 'editBtnClick'],
+  setup(props, { emit }) {
     const store = useStore()
 
+    // 0.获取操作的权限
+    const isCreate = usePermission(props.pageName, 'create')
+    const isUpdate = usePermission(props.pageName, 'update')
+    const isDelete = usePermission(props.pageName, 'delete')
+    const isQuery = usePermission(props.pageName, 'query')
+
     // 1.双向绑定pageInfo
-    const pageInfo = ref({ currentPage: 0, pageSize: 10 })
+    const pageInfo = ref({ currentPage: 1, pageSize: 10 })
 
     watch(pageInfo, () => getPageData())
 
@@ -89,7 +117,7 @@ export default defineComponent({
       store.dispatch('system/getPageListAction', {
         pageName: props.pageName,
         queryInfo: {
-          offset: pageInfo.value.currentPage * pageInfo.value.pageSize,
+          offset: (pageInfo.value.currentPage - 1) * pageInfo.value.pageSize,
           size: pageInfo.value.pageSize,
           ...queryInfo
         }
@@ -105,7 +133,6 @@ export default defineComponent({
     )
 
     // 4.获取其他的动态插槽名称
-    // 4.获取其他的动态插槽名称
     const otherPropSlots = props.contentTableConfig?.propList.filter(
       (item: any) => {
         if (item.slotName === 'status') return false
@@ -116,12 +143,37 @@ export default defineComponent({
       }
     )
 
+    // 5.删除/编辑/新建操作
+    const handleDeleteClick = (item: any) => {
+      // 拿到当前行数据
+      console.log(item)
+      store.dispatch('system/deletePageDataAction', {
+        pageName: props.pageName,
+        id: item.id
+      })
+    }
+
+    const handleNewClick = () => {
+      emit('newBtnClick')
+    }
+
+    const handleEditClick = (item: any) => {
+      emit('editBtnClick', item)
+    }
+
     return {
       dataList,
       getPageData,
       dataCount,
       pageInfo,
-      otherPropSlots
+      otherPropSlots,
+      isCreate,
+      isUpdate,
+      isDelete,
+      isQuery,
+      handleDeleteClick,
+      handleNewClick,
+      handleEditClick
     }
   }
 })

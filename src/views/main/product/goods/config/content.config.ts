@@ -5,7 +5,7 @@ export const contentTableConfig = {
     { prop: 'oldPrice', label: '原价格', minWidth: '80', slotName: 'oldPrice' },
     { prop: 'newPrice', label: '现价格', minWidth: '80' },
     { prop: 'imgUrl', label: '商品图片', minWidth: '100', slotName: 'image' },
-    { prop: 'status', label: '状态', minWidth: '70', slotName: 'status' },
+    // { prop: 'status', label: '状态', minWidth: '70', slotName: 'status' },
     {
       prop: 'createAt',
       label: '创建时间',
