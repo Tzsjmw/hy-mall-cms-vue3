@@ -7,7 +7,7 @@
       </span>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item>
+          <el-dropdown-item @click="handleFoldClick">
             <el-icon><turn-off /></el-icon>退出登录
           </el-dropdown-item>
           <el-dropdown-item divided>
@@ -25,6 +25,10 @@
 <script lang="ts">
 import { defineComponent, reactive, toRefs, computed } from 'vue'
 import { useStore } from '@/store'
+import { useRouter } from 'vue-router'
+import localCache from '@/utils/cache'
+import { ElMessage } from 'element-plus'
+import 'element-plus/dist/index.css'
 
 export default defineComponent({
   setup() {
@@ -35,13 +39,28 @@ export default defineComponent({
         'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'
     })
     const { circleUrl } = toRefs(state)
-    //
+    //拿到姓名
     const store = useStore()
     const name = computed(() => store.state.login.userInfo.name)
 
+    // 退出登录
+    const router = useRouter()
+    const handleFoldClick = () => {
+      localCache.deleteCatch('token')
+      localCache.deleteCatch('userMenus')
+      localCache.deleteCatch('userInfo')
+      router.push('/main')
+      ElMessage({
+        showClose: true,
+        message: '退出成功！',
+        center: true,
+        type: 'success'
+      })
+    }
     return {
       circleUrl,
-      name
+      name,
+      handleFoldClick
     }
   }
 })
