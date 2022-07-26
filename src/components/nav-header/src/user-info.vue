@@ -36,7 +36,7 @@ export default defineComponent({
     const state = reactive({
       // circleUrl: 'https://s2.loli.net/2022/07/19/E6lwiMITv3mjYzA.jpg'
       circleUrl:
-        'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'
+        'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg'
     })
     const { circleUrl } = toRefs(state)
     //拿到姓名

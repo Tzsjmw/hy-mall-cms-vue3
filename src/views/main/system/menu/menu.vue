@@ -3,6 +3,7 @@
     <page-content
       :contentTableConfig="contentTableConfig"
       pageName="menu"
+      :isShowNewBtn="false"
     ></page-content>
   </div>
 </template>

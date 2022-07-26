@@ -9,11 +9,11 @@
       <!-- 1.header中的插槽 -->
       <template #headerHandler>
         <el-button
-          v-if="isCreate"
+          v-if="isShowNewBtn && isCreate"
           type="primary"
           size="large"
           @click="handleNewClick"
-          >新建用户</el-button
+          >{{ btnName }}</el-button
         >
       </template>
 
@@ -82,6 +82,7 @@ import { useStore } from '@/store'
 import HyTable from '@/base-ui/table'
 
 import { usePermission } from '@/hooks/use-permission'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 export default defineComponent({
   components: {
@@ -95,6 +96,14 @@ export default defineComponent({
     pageName: {
       type: String,
       required: true
+    },
+    btnName: {
+      type: String,
+      default: '新建'
+    },
+    isShowNewBtn: {
+      type: Boolean,
+      default: true
     }
   },
   emits: ['newBtnClick', 'editBtnClick'],
@@ -113,6 +122,7 @@ export default defineComponent({
     watch(pageInfo, () => getPageData())
 
     // 2.发送网络请求
+    let otherQueryInfo = {}
     const getPageData = (queryInfo: any = {}) => {
       store.dispatch('system/getPageListAction', {
         pageName: props.pageName,
@@ -143,20 +153,48 @@ export default defineComponent({
       }
     )
 
-    // 5.删除/编辑/新建操作
+    // 5.删除
+    // const handleDeleteClick = (item: any) => {
+    //   // 拿到当前行数据
+    //   // console.log(item)
+    //   // 删除
+    //   store.dispatch('system/deletePageDataAction', {
+    //     pageName: props.pageName,
+    //     id: item.id
+    //   })
+    // }
+    // 删除提示？（ElMessageBox）
     const handleDeleteClick = (item: any) => {
-      // 拿到当前行数据
-      console.log(item)
-      store.dispatch('system/deletePageDataAction', {
-        pageName: props.pageName,
-        id: item.id
+      ElMessageBox.confirm('是否确认删除该条数据', '删除操作', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning'
       })
+        .then(() => {
+          ElMessage({
+            type: 'success',
+            message: '删除数据成功',
+            center: true
+          })
+          store.dispatch('system/deletePageDataAction', {
+            pageName: props.pageName,
+            id: item.id,
+            ...otherQueryInfo
+          })
+        })
+        .catch(() => {
+          ElMessage({
+            type: 'info',
+            message: '取消删除操作',
+            center: true
+          })
+        })
     }
-
+    // 新建
     const handleNewClick = () => {
       emit('newBtnClick')
     }
-
+    // 编辑
     const handleEditClick = (item: any) => {
       emit('editBtnClick', item)
     }

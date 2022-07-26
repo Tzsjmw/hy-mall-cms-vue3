@@ -7,7 +7,9 @@
       center
       destroy-on-close
     >
+      <!-- 新建按钮中间内容 -->
       <hy-form v-bind="modalConfig" v-model="formData"> </hy-form>
+
       <slot></slot>
       <template #footer>
         <span class="dialog-footer">

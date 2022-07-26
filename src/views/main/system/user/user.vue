@@ -5,12 +5,14 @@
       @resetBtnClick="handleResetClick"
       @queryBtnClick="handleQueryClick"
     ></page-search>
+
     <page-content
       ref="pageContentRef"
       :contentTableConfig="contentTableConfig"
       pageName="users"
       @newBtnClick="handleNewData"
       @editBtnClick="handleEditData"
+      btnName="新建用户"
     ></page-content>
 
     <page-modal

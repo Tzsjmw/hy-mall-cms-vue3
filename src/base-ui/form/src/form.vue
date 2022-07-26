@@ -13,6 +13,7 @@
               :rules="item.rules"
               :style="itemStyle"
             >
+              <!-- 根据传进来的type决定显示内容 -->
               <template
                 v-if="item.type === 'input' || item.type === 'password'"
               >
@@ -24,6 +25,7 @@
                   @update:modelValue="handleValueChange($event, item.field)"
                 />
               </template>
+
               <template v-else-if="item.type === 'select'">
                 <el-select
                   :placeholder="item.placeholder"
@@ -32,14 +34,17 @@
                   :model-value="modelValue[`${item.field}`]"
                   @update:modelValue="handleValueChange($event, item.field)"
                 >
+                  <!-- 下拉框 -->
                   <el-option
                     v-for="option in item.options"
                     :key="option.value"
                     :value="option.value"
+                    :label="option.title"
                     >{{ option.title }}</el-option
                   >
                 </el-select>
               </template>
+
               <template v-else-if="item.type === 'datepicker'">
                 <el-date-picker
                   style="width: 100%"
@@ -109,6 +114,8 @@ export default defineComponent({
     // return {
     //   formData
     // }
+
+    // 1.重点,通过双向绑定,不直接改props的办法
     const handleValueChange = (value: any, field: string) => {
       emit('update:modelValue', { ...props.modelValue, [field]: value })
     }

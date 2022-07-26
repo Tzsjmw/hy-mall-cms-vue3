@@ -6,7 +6,12 @@
       @resetBtnClick="handleResetClick"
       @queryBtnClick="handleQueryClick"
     />
-    <page-content :contentTableConfig="contentTableConfig" pageName="goods">
+    <page-content
+      :contentTableConfig="contentTableConfig"
+      pageName="goods"
+      ref="pageContentRef"
+      btnName="新建商品"
+    >
       <template #image="scope">
         <el-image
           style="width: 50px; height: 100px"

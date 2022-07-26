@@ -13,6 +13,7 @@
       ref="pageContentRef"
       @newBtnClick="handleNewData"
       @editBtnClick="handleEditData"
+      btnName="新建角色"
     ></page-content>
 
     <page-modal
