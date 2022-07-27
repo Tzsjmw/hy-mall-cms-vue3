@@ -1,18 +1,29 @@
 <template>
   <div class="chat">
-    <h2>chat</h2>
+    <wf-editor v-model:value="htmlString" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
+import WfEditor from '@/base-ui/editor'
 
 export default defineComponent({
   name: 'chat',
+  components: {
+    WfEditor
+  },
   setup() {
-    return {}
+    const htmlString = ref<string>('加油,一直学下去!!!!!!!')
+    return {
+      htmlString
+    }
   }
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+.chat {
+  margin-top: 15px;
+}
+</style>

@@ -38,6 +38,7 @@ const store = createStore<IRootState>({
         size: 1000
       })
       const { list: departmentList } = departmentResult.data
+
       const roleResult = await getPageListData('/role/list', {
         offset: 0,
         size: 1000
