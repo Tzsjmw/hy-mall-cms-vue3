@@ -28,6 +28,8 @@
     // 路径解析(类似于webpack alias)
     "paths": {
       "@/*": ["src/*"]
+      // "resolveJsonModule": true,
+      // "esModuleInterop": true
     },
 
     "suppressImplicitAnyIndexErrors": true, //加入这段代码解决main.ts报错问题
