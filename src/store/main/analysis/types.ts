@@ -7,4 +7,6 @@ export interface IDashboardState {
   categoryGoodsFavor: any[]
   // 不同城市的销量数据
   addressGoodsSale: any[]
+  // 顶部数据
+  topPanelDatas: any[]
 }
