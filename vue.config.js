@@ -4,7 +4,7 @@ const AutoImport = require('unplugin-auto-import/webpack')
 const Components = require('unplugin-vue-components/webpack')
 const { ElementPlusResolver } = require('unplugin-vue-components/resolvers')
 module.exports = defineConfig({
-    publicPath: '/',
+    publicPath: './',
     transpileDependencies: true,
     // 1.配置方式一：CLI提供的属性
     //  修改打包的路径
